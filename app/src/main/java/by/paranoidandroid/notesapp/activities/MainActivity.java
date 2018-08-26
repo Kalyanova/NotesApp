@@ -15,7 +15,7 @@ import by.paranoidandroid.notesapp.database.entities.Note;
 import by.paranoidandroid.notesapp.utils.DividerItemDecoration;
 
 public class MainActivity extends AppCompatActivity {
-    private EditText edTitle, edBody;
+    private EditText etTitle, etBody;
     private NotesAdapter adapter;
 
     @Override
@@ -23,16 +23,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final int DP_MARGIN = 4;
         RecyclerView recyclerView = findViewById(R.id.rv_notes);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, 4));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DP_MARGIN));
 
         adapter = new NotesAdapter(this);
         recyclerView.setAdapter(adapter);
         adapter.updateList(getNoteList());
 
-        edTitle =  findViewById(R.id.et_title);
-        edBody =  findViewById(R.id.et_body);
+        etTitle =  findViewById(R.id.et_title);
+        etBody =  findViewById(R.id.et_body);
 
         Button button = findViewById(R.id.bt_add_note);
         button.setOnClickListener(view -> onAddNoteButtonClick());
@@ -41,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
     private void onAddNoteButtonClick() {
         AppDatabase.getAppDatabase(this)
                 .noteDao()
-                .insert(new Note(edTitle.getText().toString(),
-                                   edBody.getText().toString()));
+                .insert(new Note(etTitle.getText().toString(),
+                                   etBody.getText().toString()));
         List<Note> updatedList = getNoteList();
         adapter.updateList(updatedList);
     }
