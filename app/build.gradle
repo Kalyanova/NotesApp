@@ -26,7 +26,15 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation "androidx.appcompat:appcompat:$appcompatVersion"
+    implementation "com.google.android.material:material:$jetpackVersion"
+    implementation "androidx.appcompat:appcompat:$jetpackVersion"
+    implementation "androidx.recyclerview:recyclerview:$jetpackVersion"
+    implementation "androidx.cardview:cardview:$jetpackVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+    implementation "com.squareup.picasso:picasso:$picassoVersion"
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+
     implementation "androidx.room:room-common:$roomVersion"
     implementation "androidx.room:room-runtime:$roomVersion"
     annotationProcessor "androidx.room:room-compiler:$roomVersion"
