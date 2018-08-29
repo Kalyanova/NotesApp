@@ -11,18 +11,20 @@ import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 import by.paranoidandroid.notesapp.R;
-import by.paranoidandroid.notesapp.database.AppDatabase;
 import by.paranoidandroid.notesapp.database.entities.Note;
+import by.paranoidandroid.notesapp.utils.RemoveItemListener;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
     private List<Note> notes;
     private LayoutInflater inflater;
     private Context context;
+    private RemoveItemListener removeItemListener;
 
-    public NotesAdapter(Context ctx) {
+    public NotesAdapter(Context ctx, RemoveItemListener listener) {
         context = ctx;
         notes = new ArrayList<>();
         inflater = LayoutInflater.from(context);
+        removeItemListener = listener;
     }
 
     @Override
@@ -65,9 +67,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
     private ItemClickListener clickListener = (view, context, position) -> {
         Note note = notes.get(position);
-        AppDatabase.getAppDatabase(context).noteDao().delete(note);
+        removeItemListener.removeItem(note);
         notes.remove(note);
-        notifyItemRemoved(position);
     };
 
     interface ItemClickListener {

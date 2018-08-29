@@ -3,20 +3,22 @@ package by.paranoidandroid.notesapp.activities;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import by.paranoidandroid.notesapp.R;
 import by.paranoidandroid.notesapp.adapters.NotesAdapter;
-import by.paranoidandroid.notesapp.database.AppDatabase;
 import by.paranoidandroid.notesapp.database.entities.Note;
 import by.paranoidandroid.notesapp.utils.DividerItemDecoration;
+import by.paranoidandroid.notesapp.utils.RemoveItemListener;
+import by.paranoidandroid.notesapp.viewmodel.NoteViewModel;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RemoveItemListener {
     private EditText etTitle, etBody;
     private NotesAdapter adapter;
+    private NoteViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,27 +30,29 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DP_MARGIN));
 
-        adapter = new NotesAdapter(this);
+        adapter = new NotesAdapter(this, this);
         recyclerView.setAdapter(adapter);
-        adapter.updateList(getNoteList());
 
         etTitle =  findViewById(R.id.et_title);
         etBody =  findViewById(R.id.et_body);
 
         Button button = findViewById(R.id.bt_add_note);
         button.setOnClickListener(view -> onAddNoteButtonClick());
+
+        NoteViewModel.Factory viewModelFactory = new NoteViewModel.Factory(getApplication());
+        viewModel = ViewModelProviders
+                .of(this, viewModelFactory)
+                .get(NoteViewModel.class);
+
+        viewModel.getNotes().observe(this, notes -> adapter.updateList(notes));
     }
 
     private void onAddNoteButtonClick() {
-        AppDatabase.getAppDatabase(this)
-                .noteDao()
-                .insert(new Note(etTitle.getText().toString(),
-                                   etBody.getText().toString()));
-        List<Note> updatedList = getNoteList();
-        adapter.updateList(updatedList);
+        viewModel.insertNote(etTitle.getText().toString(), etBody.getText().toString());
     }
 
-    private List<Note> getNoteList() {
-        return AppDatabase.getAppDatabase(this).noteDao().selectAll();
+    @Override
+    public void removeItem(Note note) {
+        viewModel.deleteNote(note);
     }
 }

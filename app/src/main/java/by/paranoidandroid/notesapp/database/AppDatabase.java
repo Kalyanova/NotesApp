@@ -26,7 +26,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             // Allow queries on the main thread.
                             // Don't do this on a real app!
                             // Only for testing purposes.
-                            .allowMainThreadQueries()
+                            //.allowMainThreadQueries()
                             .build();
                 }
             }
