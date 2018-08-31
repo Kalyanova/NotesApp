@@ -8,15 +8,13 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 import by.paranoidandroid.notesapp.database.AppDatabase;
 import by.paranoidandroid.notesapp.database.entities.Note;
 
 public class NoteViewModel extends AndroidViewModel {
     private MutableLiveData<List<Note>> notes;
 
-    NoteViewModel(@NonNull Application application) {
+    public NoteViewModel(@NonNull Application application) {
         super(application);
     }
 
@@ -42,25 +40,6 @@ public class NoteViewModel extends AndroidViewModel {
     public void deleteNote(Note note) {
         new DBAsyncTask(AppDatabase.getAppDatabase(getApplication()), notes, Action.Deleting)
                 .execute(note);
-    }
-
-    /**
-     * A creator is used to inject the Application into the ViewModel.
-     */
-    public static class Factory extends ViewModelProvider.NewInstanceFactory {
-
-        @NonNull
-        private final Application application;
-
-        public Factory(@NonNull Application app) {
-            application = app;
-        }
-
-        @Override
-        public <T extends ViewModel> T create(Class<T> modelClass) {
-            //noinspection unchecked
-            return (T) new NoteViewModel(application);
-        }
     }
 
     /**

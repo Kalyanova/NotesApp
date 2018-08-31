@@ -5,7 +5,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import by.paranoidandroid.notesapp.R;
@@ -39,11 +38,7 @@ public class MainActivity extends AppCompatActivity implements RemoveItemListene
         Button button = findViewById(R.id.bt_add_note);
         button.setOnClickListener(view -> onAddNoteButtonClick());
 
-        NoteViewModel.Factory viewModelFactory = new NoteViewModel.Factory(getApplication());
-        viewModel = ViewModelProviders
-                .of(this, viewModelFactory)
-                .get(NoteViewModel.class);
-
+        viewModel = new NoteViewModel(getApplication());
         viewModel.getNotes().observe(this, notes -> adapter.updateList(notes));
     }
 
